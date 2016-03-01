@@ -22,9 +22,16 @@ Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS
 
 void setup(){
   lock.attach(8);
+  lock.write(0);
   pinMode(13, OUTPUT);
 }
-  
+
+void blink(int delayLength) {
+    analogWrite(13, 50);
+    delay(delayLength);
+    analogWrite(13, 0);
+}
+
 void loop(){
   char customKey = customKeypad.getKey();
   
@@ -37,27 +44,25 @@ void loop(){
     }
     else if(code[2] == 'x'){
       code[2] = customKey;
-    }
+   }
     else if(code[3] == 'x'){
       code[3] = customKey;
     }
-    else if(code[4] == 'x'){
-      code[4] = customKey;
-    }
     else{
-      if(code[0] == '5'){
+      code[4] = customKey;
+      if(code[0] == '5' && code[1] == '8' && code[2] == '0' && code[3] == '9' && code[4] == '*'){
         lock.write(180);
-        delay(15);
+        delay(1000);
         lock.write(0);
       } else{
         lock.write(90);
-        delay(15);
+        delay(1000);
         lock.write(45);
+        delay(1000);
+        lock.write(0);
       }
-      lock.write(0);
+      code[0] = 'x'; code[1] = 'x'; code[2] = 'x'; code[3] = 'x'; code[4] = 'x';
     }
-    analogWrite(13, 50);
-    delay(50);
-    analogWrite(13, 0);
+    blink(50);
   }
 }
